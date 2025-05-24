@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style_index.css">
+    <title>Previsão</title>
+</head>
+<body>
+    <div class="app">
+      <nav class="navbar">
+        {% if session.usuario_id %}
+          <a href="{{ url_for('usuarios.perfil') }}">👤 Meu Perfil</a>
+          <a href="{{ url_for('usuarios.logout') }}">🚪 Sair</a>
+        {% else %}
+          <a href="{{ url_for('usuarios.login') }}">🔐 Login</a>
+        {% endif %}
+      </nav>
+        <h1>Previsão gasto de energia</h1>
+        <p>
+          Para saber quanto você gasta de energia, preencha os campos abaixo:
+        </p>
+        <form method="post" action="{{ url_for('prever_consumo') }}">
+        <label for="tipo_construcao">Tipo de Construção:</label><br>
+        <select id="tipo_construcao" name="tipo_construcao" required>
+            <option value="">--Selecione--</option>
+            <option value="0">Comercial</option>
+            <option value="1">Residencial</option>
+            <option value="2">Industrial</option>
+        
+        </select><br><br>
+
+        <label for="area">Área (m²):</label><br>
+        <input type="number" id="area" name="area" step="0.01" required><br><br>
+
+        <label for="ocupantes">Número de Ocupantes:</label><br>
+        <input type="number" id="ocupantes" name="ocupantes" required><br><br>
+
+        <label for="aparelhos">Quantidade de Aparelhos:</label><br>
+        <input type="number" id="aparelhos" name="aparelhos" required><br><br>
+
+        <label for="temperatura">Temperatura Média (°C):</label><br>
+        <input type="number" id="temperatura" name="temperatura" step="0.1" required><br><br>
+
+        <label for="dia_semana">Dia da Semana:</label><br>
+        <select id="dia_semana" name="dia_semana" required>
+            <option value="">--Selecione--</option>
+            <!--decidir se deixa o nome ou o valor, caso facilite para a previsão-->
+            <option value="0">Dia da Semana</option>
+            <option value="1">Final de Semana</option>
+        
+        </select><br><br>
+
+        <button type="submit">Enviar</button>
+
+        <!--GERAR A PREVISÃO COM O ARQUIVO PYTHON-->
+        {% if resultado %}
+          <div class="resultado-box">
+            <h2>🔋 Consumo Previsto</h2>
+            <p class="resultado">{{ resultado }}</p>
+          </div>
+        {% endif %}
+
+        <!--verificar se tá logado-->
+        {% if session.usuario_id %}
+          <!-- mostra o formulário -->
+        {% else %}
+          <p>Você precisa estar <a href="{{ url_for('usuarios.login') }}">logado</a> para ver a previsão.</p>
+        {% endif %}
+      </div>
+    
+
+
+             <!--Vlibra inicio-->
+             <div vw class="enabled">
+                <div vw-access-button class="active"></div>
+                <div vw-plugin-wrapper>
+                  <div class="vw-plugin-top-wrapper"></div>
+                </div>
+              </div>
+              <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+              <script>
+                new window.VLibras.Widget('https://vlibras.gov.br/app');
+              </script>
+            <!--Vlibra Fim-->
+            
+            <script src="index.js"></script>
+</body>
+</html>
